@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ham Radio Callsign Search</title>
+    <link rel="stylesheet" href="static/style.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333; /* Dark background color */
+            color: #fff; /* Light text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column; /* Change to column layout */
+            align-items: center; /* Center horizontally */
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #444; /* Darker container background color */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Light shadow */
+            transition: margin-left 0.5s;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+
+        .result-card {
+            background-color: #555;
+            color: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidenav" id="sidebar">
+        <p1 style="font-size: x-small;">V 1.0 Beta</p1>
+        <a href="index.html">Welcome</a>
+        <a href="logform.html">Log-it</a>
+        <a href="contactdisplay.html">Log Books</a>
+        <a href="map.html">Map</a>
+        <a href="search.html">Look Up Call Sign</a>
+        <a href="settings.html">Settings</a>
+        <!-- Toggle button for the sidebar -->
+    </div>
+
+    <div class="container">
+        <h1>Ham Radio Callsign Search</h1>
+        <input type="text" id="callsignInput" placeholder="Enter callsign and press Enter">
+        <div id="searchResult"></div>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script>
+        document.getElementById('callsignInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                searchCallsign();
+            }
+        });
+
+        function searchCallsign() {
+            const callsign = document.getElementById('callsignInput').value;
+            if (callsign.trim() !== '') {
+                fetch(`/getHamdbInfo/${callsign}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        displaySearchResult(data.hamdb_info);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        displaySearchResult(null);
+                    });
+            }
+        }
+
+        function displaySearchResult(info) {
+            const resultContainer = document.getElementById('searchResult');
+            resultContainer.innerHTML = '';
+
+            if (info) {
+                const resultCard = document.createElement('div');
+                resultCard.classList.add('result-card');
+                resultCard.innerHTML = `
+                    <p>Call Sign           : ${info.call || 'N/A'}</p>
+                    <p>Class/License Level : ${info.class || 'N/A'}</p>
+                    <p>Expires             : ${info.expires || 'N/A'}</p>
+                    <p>First Name          : ${info.fname || 'N/A'}</p>
+                    <p>Middle Initial      : ${info.mi || 'N/A'}</p>
+                    <p>Last Name           : ${info.name || 'N/A'}</p>
+                    <p>Country             : ${info.country || 'N/A'}</p>
+                    <p>Locality            : ${info.addr2 || 'N/A'}</p>
+                    <p>State               : ${info.state || 'N/A'}</p>
+                `;
+                resultContainer.appendChild(resultCard);
+            } else {
+                const noResultCard = document.createElement('div');
+                noResultCard.classList.add('result-card');
+                noResultCard.innerText = 'No information available.';
+                resultContainer.appendChild(noResultCard);
+            }
+        }
+    </script>
+    
+</body>
+</html>
+
+<center>
+    <p1>API Provided By: https://hamdb.org/</p1>
+</center>

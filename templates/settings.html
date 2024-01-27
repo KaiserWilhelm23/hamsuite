@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings</title>
+    <link rel="stylesheet" href="static/style.css">
+    <style>
+        /* Additional styles for sidebar toggle functionality */
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #212121;
+            padding-top: 20px;
+            transition: left 0.5s;
+        }
+
+        .container {
+            margin-left: 200px;
+            padding: 20px;
+            transition: margin-left 0.5s;
+        }
+
+        .sidenav.closed {
+            left: -200px !important;
+        }
+
+        /* Button styles */
+        .toggle-btn {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.4s;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="sidenav" id="sidebar">
+            <p1 style="font-size: x-small;">V 1.0 Beta</p1>
+            <a href="index.html">Welcome</a>
+            <a href="logform.html">Log-it</a>
+            <a href="contactdisplay.html">Log Books</a>
+            <a href="map.html">Map</a>
+            <a href="search.html">Look Up Call Sign</a>
+            <a href="settings.html">Settings</a>
+            
+            <!-- Toggle button for the sidebar -->
+            <button class="toggle-btn" onclick="toggleSidebar()">→</button>
+        </div>
+
+        <h1>Settings</h1>
+        
+        <form id="settingsForm">
+            <label for="newCallSign">Edit Call Sign:</label>
+            <input type="text" id="newCallSign" required>
+            
+            <button type="button" onclick="updateCallSign()">Update Call Sign</button>
+        </form>
+    </div>
+
+    <!-- Include Leaflet JavaScript -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <!-- Your custom JavaScript file -->
+    <script src="static/script.js"></script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('closed');
+        }
+    </script>
+</body>
+</html>

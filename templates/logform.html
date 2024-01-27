@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log-It</title>
+    <link rel="stylesheet" href="static/style.css">
+    <style>
+        /* Additional styles for sidebar toggle functionality */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #333; /* Dark background color */
+            color: #fff; /* Light text color */
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 200px;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #212121;
+            padding-top: 20px;
+            transition: left 0.5s;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column; /* Change to column layout */
+            align-items: center; /* Center horizontally */
+            max-width: 800px;
+            margin: 50px auto;
+            background-color: #444; /* Darker container background color */
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1); /* Light shadow */
+            transition: margin-left 0.5s;
+        }
+
+        .sidenav.closed {
+            left: -200px !important;
+        }
+
+        /* Button styles */
+        .toggle-btn {
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            transform: translateY(-50%);
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.4s;
+            display: block;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: grid;
+            grid-gap: 10px;
+            max-width: 400px;
+            width: 100%; /* Full width */
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+            background-color: #555; /* Dark input background color */
+            color: #fff; /* Light input text color */
+            border: 1px solid #666; /* Darker input border color */
+        }
+
+        button {
+            background-color: #4caf50;
+            color: #fff;
+            padding: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.4s;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidenav" id="sidebar">
+        <p1 style="font-size: x-small;">V 1.0 Beta</p1>
+        <a href="index.html">Welcome</a>
+        <a href="logform.html">Log-it</a>
+        <a href="contactdisplay.html">Log Books</a>
+        <a href="map.html">Map</a>
+        <a href="search.html">Look Up Call Sign</a>
+        <a href="settings.html">Settings</a>
+        <!-- Toggle button for the sidebar -->
+        <button class="toggle-btn" onclick="toggleSidebar()">→</button>
+    </div>
+
+    <center><h1>Log a Contact</h1></center>
+    <div class="container">
+        <label for="bookSelect">Select Book:</label>
+        <select id="bookSelect" onchange="updateSelectedBook()">
+            <!-- Options will be populated dynamically from books/book_name.json -->
+        </select>
+        <p> </p>
+        
+        <form id="logForm">
+            <label for="callSign">Call Sign:</label>
+            <input type="text" id="callSign" required>
+            
+            <label for="name">Name:</label>
+            <input type="text" id="name" required>
+            
+            <label for="country">Country:</label>
+            <input type="text" id="country" required>
+            
+            <label for="state">State/Province:</label>
+            <input type="text" id="state" required>
+            
+            <label for="locality">Locality/County:</label>
+            <input type="text" id="locality" required>
+            
+            <label for="date">Date of Contact:</label>
+            <input type="date" id="date" required>
+            
+            <label for="time">Time of Contact:</label>
+            <input type="time" id="time" required>
+            
+            <button type="button" onclick="saveContact()">Save Contact</button>
+        </form>
+    </div>
+
+    <script src="static/script.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Fetch book list from the server
+            fetch('/getBooks')
+                .then(response => response.json())
+                .then(data => {
+                    // Select the dropdown element
+                    const bookSelect = document.getElementById('bookSelect');
+
+                    // Clear existing options
+                    bookSelect.innerHTML = '';
+
+                    // Iterate over the books and add them as options
+                    data.books.forEach(book => {
+                        const option = document.createElement('option');
+                        option.value = book;
+                        option.textContent = book;
+                        bookSelect.appendChild(option);
+                    });
+                });
+
+            function toggleSidebar() {
+                const sidebar = document.getElementById('sidebar');
+                sidebar.classList.toggle('closed');
+            }
+
+            function updateSelectedBook() {
+                const selectedBook = document.getElementById('bookSelect').value;
+                document.getElementById('selectedBook').innerText = `Selected Book: ${selectedBook}`;
+            }
+        });
+    </script>
+</body>
+</html>
